@@ -1,10 +1,10 @@
 {
   "name": "discord-voice-api",
   "version": "1.0.0",
-  "description": "Discord botunu sese sokan ve loglama yapan Vercel API",
-  "main": "api/index.js",
+  "description": "Discord botunu sese sokan ve loglama yapan Render API",
+  "main": "server.js",
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
