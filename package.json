@@ -13,6 +13,6 @@
     "libsodium-wrappers": "^0.7.13"
   },
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   }
 }
