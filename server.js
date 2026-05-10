@@ -1,6 +1,6 @@
 const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
-const { joinVoiceChannel } = require('@discordjs/voice');
+const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -100,27 +100,25 @@ app.post('/api/bot/join-voice', async (req, res) => {
             adapterCreator: guild.voiceAdapterCreator,
         });
 
+        // Bağlantının tamamlanmasını bekle
+        await entersState(connection, VoiceConnectionStatus.Ready, 15000);
+
         res.status(200).json({
             success: true,
-            message: `Bot ${channelId} ID'li ses kanalına başarıyla katıldı.`
+            message: `Bot ${channelId} ID'li ses kanalına başarıyla katıldı ve bağlantı stabil.`
         });
 
     } catch (error) {
         console.error('[SES HATASI]', error);
         res.status(500).json({
             success: false,
-            message: 'Sese katılırken bir hata oluştu.',
+            message: 'Sese katılırken bir hata oluştu veya zaman aşımına uğradı.',
             error: error.message
         });
     }
 });
 
-// Vercel Serverless yapısı için app.listen yerel testlerde çalışması için koşullandırıldı
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
-        console.log(`Sunucu http://localhost:${PORT} adresinde dinleniyor.`);
-    });
-}
-
-// Vercel'in API'yi bir modül olarak alabilmesi için dışa aktarım
-module.exports = app;
+// Render gibi platformlarda sürekli çalışması için standart dinleme
+app.listen(PORT, () => {
+    console.log(`Sunucu http://localhost:${PORT} adresinde dinleniyor.`);
+});
